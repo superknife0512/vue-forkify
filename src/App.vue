@@ -4,7 +4,10 @@
 
         <v-result></v-result>
 
-        <v-recipe></v-recipe>
+        <div class="recipe">
+          <loader v-if="isLoading"></loader>
+          <v-recipe></v-recipe>
+        </div>
 
         <v-shop-list></v-shop-list>         
     </div>
@@ -22,6 +25,11 @@ export default {
     vResult,
     vRecipe,
     vShopList,
+  },
+  computed: {
+    isLoading(){
+      return this.$store.state.loadingRec
+    }
   }
 }
 </script>

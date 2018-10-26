@@ -50,6 +50,7 @@ export default {
   },
   methods:{
       fetchData(){
+          this.$store.commit('clearData','results');
           this.$store.dispatch('fetchData',this.search);
           this.search = '';
       }

@@ -88,10 +88,10 @@
         border: none;
         background: none;
         cursor: pointer; }
-        .btn-tiny svg {
+        .btn-tiny i {
           height: 100%;
           width: 100%;
-          fill: #F59A83;
+          color: #F59A83;
           transition: all .3s; }
         .btn-tiny:focus {
           outline: none; }

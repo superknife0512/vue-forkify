@@ -36,6 +36,7 @@ export default {
     },
     methods:{
         getRecipe(){
+            this.$store.commit('clearData', 'recipe');
             this.$store.dispatch('fetchRecipe',this.data.recipe_id);
         }
     }

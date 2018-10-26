@@ -1,46 +1,35 @@
 <template>
-    <div class="recipe">
-
-            <!--
+    <div v-if="recipe">            
             <figure class="recipe__fig">
-                <img src="img/test-1.jpg" alt="Tomato" class="recipe__img">
+                <img :src="recipe.image_url" alt="Tomato" class="recipe__img">
                 <h1 class="recipe__title">
-                    <span>Pasta with tomato cream sauce</span>
+                    <span>{{recipe.title}}</span>
                 </h1>
             </figure>
             <div class="recipe__details">
                 <div class="recipe__info">
-                    <svg class="recipe__info-icon">
-                        <use href="img/icons.svg#icon-stopwatch"></use>
-                    </svg>
-                    <span class="recipe__info-data recipe__info-data--minutes">45</span>
+                    
+                    <i class="fas fa-stopwatch recipe__info-icon"></i>
+                    <span class="recipe__info-data recipe__info-data--minutes">{{time}}</span>
                     <span class="recipe__info-text"> minutes</span>
                 </div>
                 <div class="recipe__info">
-                    <svg class="recipe__info-icon">
-                        <use href="img/icons.svg#icon-man"></use>
-                    </svg>
-                    <span class="recipe__info-data recipe__info-data--people">4</span>
+                    <i class="fas fa-users recipe__info-icon"></i>
+                    <span class="recipe__info-data recipe__info-data--people">{{serving}}</span>
                     <span class="recipe__info-text"> servings</span>
 
                     <div class="recipe__info-buttons">
                         <button class="btn-tiny">
-                            <svg>
-                                <use href="img/icons.svg#icon-circle-with-minus"></use>
-                            </svg>
+                           <i class="fas fa-minus-circle"></i>
                         </button>
                         <button class="btn-tiny">
-                            <svg>
-                                <use href="img/icons.svg#icon-circle-with-plus"></use>
-                            </svg>
+                            <i class="fas fa-plus-circle"></i>
                         </button>
                     </div>
 
                 </div>
-                <button class="recipe__love">
-                    <svg class="header__likes">
-                        <use href="img/icons.svg#icon-heart-outlined"></use>
-                    </svg>
+                <button class="recipe__love">                    
+                    <i class="fas fa-heart heart__likes"></i>
                 </button>
             </div>
 
@@ -49,9 +38,8 @@
             <div class="recipe__ingredients">
                 <ul class="recipe__ingredient-list">
                     <li class="recipe__item">
-                        <svg class="recipe__icon">
-                            <use href="img/icons.svg#icon-check"></use>
-                        </svg>
+                        
+                        <i class="fas fa-utensils recipe__icon"></i>
                         <div class="recipe__count">1000</div>
                         <div class="recipe__ingredient">
                             <span class="recipe__unit">g</span>
@@ -117,9 +105,7 @@
                 </ul>
 
                 <button class="btn-small recipe__btn">
-                    <svg class="search__icon">
-                        <use href="img/icons.svg#icon-shopping-cart"></use>
-                    </svg>
+                    <i class="fas fa-shopping-cart search__icon"></i>
                     <span>Add to shopping list</span>
                 </button>
             </div>
@@ -128,23 +114,107 @@
                 <h2 class="heading-2">How to cook it</h2>
                 <p class="recipe__directions-text">
                     This recipe was carefully designed and tested by
-                    <span class="recipe__by">The Pioneer Woman</span>. Please check out directions at their website.
+                    <span class="recipe__by">{{recipe.publisher}}</span>. Please check out directions at their website.
                 </p>
-                <a class="btn-small recipe__btn" href="http://thepioneerwoman.com/cooking/pasta-with-tomato-cream-sauce/" target="_blank">
+                <a class="btn-small recipe__btn" :href="recipe.source_url" target="_blank">
                     <span>Directions</span>
-                    <svg class="search__icon">
-                        <use href="img/icons.svg#icon-triangle-right"></use>
-                    </svg>
+                   <i class="fas fa-caret-right search__icon"></i>
 
                 </a>
-            </div>
-            -->
+            </div>           
         </div>
 </template>
 
 <script>
 export default {
-    
+    data(){
+        return{
+            serving: 4
+        }
+    },
+
+    computed:{
+        recipe(){
+            const recipeData = this.$store.state.recipe;
+            if(recipeData){
+                return recipeData
+            }
+            return;
+        },
+
+        time(){
+            const ingredients = this.recipe.ingredients;
+            return (ingredients.length/3) * 15;
+        },
+
+        parseIngredient(){
+            const ingredients = this.recipe.ingredients;
+            const longUnit = ['tablespoon', 'tablespoons', 'teaspoon', 'teaspoons', 'cup', 'cups', 'ounces'];
+            const shortUnit = ['tbsp', 'tbsp', 'tsp', 'tsp', 'cup', 'cup', 'oz'];
+            const otherUnit = ['gram', 'pound', 'pounds'];
+
+            //standalize
+            const newIngredient = ingredients.map( ele => { //each ele is a string
+            
+            //uniform the unit
+            longUnit.forEach( (ele2, i)=>{
+                ele = ele.replace(ele2, shortUnit[i]);
+            })
+            
+            ele = ele.replace(/ *\([^)]*\) */g, " ");
+
+            //change it into an object
+            let ingreArr = ele.split(' ');//['2', 'cup', 'tomatoes']
+            //find index from of the unit
+            let indexCount = ingreArr.findIndex( ele3 => {
+                [...shortUnit, ...otherUnit].includes(ele3);
+            })
+
+            let objIng;
+            if(indexCount < 0){
+
+                if(isNaN(parseInt(ingreArr[0]))){
+                    //1.1 no count no unit indexCount = -1
+                    objIng = {
+                        count: 1,
+                        unit: '',
+                        ingredient: ingreArr.join(' ')
+                    }
+                } else{
+                    //1.2 have count but no unit indexCount = -1
+                    objIng = {
+                        count: parseInt(ingreArr[0]),
+                        unit: '',
+                        ingredient: ingreArr.slice(1, ingreArr.length).join(' ')
+                    }
+                }
+            }
+
+            if(indexCount > 0){
+                //2.1 have count and unit
+                //2.2 have weird count 1-1/2 and its unit
+                //['2-1/2', 'cup', 'tomatoes']
+                let countArr ;
+                if(ingreArr[0].includes('-')){
+                   countArr = parseInt(eval(ingreArr[0].split('-').join('+')));
+                } else {
+                    countArr = ingreArr[0];
+                }
+                let unitIng = ingreArr[indexCount];
+                
+                objIng = {
+                    count: countArr,
+                    unit: unitIng,
+                    ingredient: ingreArr.slice(indexCount, ingreArr.length).join(' ')
+                }
+
+            }
+            return objIng;
+        })
+        return newIngredient
+
+        }
+    }
 }
 </script>
 
@@ -203,7 +273,7 @@ export default {
   .recipe__info-icon {
     height: 2rem;
     width: 2rem;
-    fill: #F59A83;
+    color: #F59A83;
     margin-right: 1rem; }
   .recipe__info-data {
     margin-right: .4rem;
@@ -283,5 +353,15 @@ export default {
     color: #968B87; }
   .recipe__by {
     font-weight: 700; }
+    .heart__likes{
+        color: white;
+        font-size: 2.5rem;
+    }
+    .recipe__icon{
+        color: #F59A83;
+        font-size: 1rem;
+        display: flex;
+        justify-content: center;
+    }
 </style>
 
