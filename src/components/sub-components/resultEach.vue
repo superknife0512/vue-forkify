@@ -1,5 +1,5 @@
 <template>
-    <li>
+    <li @click="getRecipe">
          <a class="results__link results__link" :href="`#${data.recipe_id}`">
             <figure class="results__fig">
                  <img :src="`${data.image_url}`" :alt="`${data.title}`">
@@ -32,6 +32,11 @@ export default {
             } else {
                 return value
             }
+        }
+    },
+    methods:{
+        getRecipe(){
+            this.$store.dispatch('fetchRecipe',this.data.recipe_id);
         }
     }
 }

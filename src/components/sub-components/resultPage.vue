@@ -1,17 +1,17 @@
 <template>
    <div class="results__pages">
                 
-                <button class="btn-inline results__btn--prev">
-                    <svg class="search__icon">
-                        <use href="img/icons.svg#icon-triangle-left"></use>
-                    </svg>
-                    <span>Page 1</span>
+                <button class="btn-inline results__btn--prev" 
+                        v-show="page-1 !== 0"
+                        @click="back">
+                    <span>Page {{ page - 1 }}</span>
+                    <i class="fas fa-caret-left search__icon"></i>
                 </button>
-                <button class="btn-inline results__btn--next">
-                    <span>Page 3</span>
-                    <svg class="search__icon">
-                        <use href="img/icons.svg#icon-triangle-right"></use>
-                    </svg>
+                <button class="btn-inline results__btn--next" 
+                        v-show="page+1 <= totalPages"
+                        @click="front">
+                    <span>Page {{page + 1}}</span>
+                    <i class="fas fa-caret-right search__icon"></i>
                 </button>
                
             </div>          
@@ -21,10 +21,19 @@
 export default {
     data(){
         return{
-            page
+            
         }
     },
     props: ['totalPages', 'page'],
+
+    methods:{
+        front(){
+            this.$emit('goFront');
+        },
+        back(){
+            this.$emit('goBack');
+        }
+    }
 }
 </script>
 

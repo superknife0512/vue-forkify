@@ -12,7 +12,11 @@
                 </result-each>
             </ul>
 
-           <result-page :totalPages="allPages" :page="page"></result-page>
+           <result-page :totalPages="allPages" 
+                        :page="page"
+                        @goFront="goFront"
+                        @goBack="goBack"
+                        ></result-page>
             
         </div>
 </template>
@@ -32,13 +36,17 @@ export default {
     },
     computed:{
         allPages(){
-            return Math.ceil(this.$store.state.results.length/10);
+            const allResult = this.$store.state.results;
+            if(allResult){
+
+                return Math.ceil(allResult.length/10);
+            }
+            return;
         },
 
         getResults(){
             let start = (this.page - 1)*9;
-            let end = (this.page)*9;
-            
+            let end = (this.page)*9;            
             const allResults = this.$store.state.results;
             if(allResults){
                 return allResults.slice(start,end);
@@ -50,6 +58,14 @@ export default {
             return this.$store.state.isLoading;
         },
 
+    },
+    methods:{
+        goFront(){
+            this.page++
+        },
+        goBack(){
+            this.page--
+        }
     }
 }
 </script>
