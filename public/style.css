@@ -1,0 +1,123 @@
+* {
+    margin: 0;
+    padding: 0; }
+  
+  *,
+  *::before,
+  *::after {
+    box-sizing: inherit; }
+  
+  html {
+    box-sizing: border-box;
+    font-size: 62.5%; }
+    @media only screen and (max-width: 68.75em) {
+      html {
+        font-size: 50%; } }
+  
+  body {
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    color: #655A56;
+    background-image: linear-gradient(to right bottom, #FBDB89, #F48982);
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-height: calc(100vh - 2 * 4vw); }
+
+    .btn, .btn-small, .btn-small:link, .btn-small:visited {
+        background-image: linear-gradient(to right bottom, #FBDB89, #F48982);
+        border-radius: 10rem;
+        border: none;
+        text-transform: uppercase;
+        color: #fff;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        transition: all .2s; }
+        .btn:hover, .btn-small:hover {
+          transform: scale(1.05); }
+        .btn:focus, .btn-small:focus {
+          outline: none; }
+        .btn > *:first-child, .btn-small > *:first-child {
+          margin-right: 1rem; }
+      
+      .btn {
+        padding: 1.3rem 3rem;
+        font-size: 1.4rem; }
+        .btn svg {
+          height: 2.25rem;
+          width: 2.25rem;
+          fill: currentColor; }
+      
+      .btn-small, .btn-small:link, .btn-small:visited {
+        font-size: 1.3rem;
+        padding: 1rem 1.75rem;
+        text-decoration: none; }
+        .btn-small svg, .btn-small:link svg, .btn-small:visited svg {
+          height: 1.5rem;
+          width: 1.5rem;
+          fill: currentColor; }
+      
+      .btn-inline {
+        color: #F59A83;
+        font-size: 1.2rem;
+        border: none;
+        background-color: #F9F5F3;
+        padding: .8rem 1.2rem;
+        border-radius: 10rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        transition: all .2s; }
+        .btn-inline svg {
+          height: 1.5rem;
+          width: 1.5rem;
+          fill: currentColor;
+          margin: 0 .2rem; }
+        .btn-inline span {
+          margin: 0 .4rem; }
+        .btn-inline:hover {
+          color: #F48982;
+          background-color: #F2EFEE; }
+        .btn-inline:focus {
+          outline: none; }
+      
+      .btn-tiny {
+        height: 1.75rem;
+        width: 1.75rem;
+        border: none;
+        background: none;
+        cursor: pointer; }
+        .btn-tiny svg {
+          height: 100%;
+          width: 100%;
+          fill: #F59A83;
+          transition: all .3s; }
+        .btn-tiny:focus {
+          outline: none; }
+        .btn-tiny:hover svg {
+          fill: #F48982;
+          transform: translateY(-1px); }
+        .btn-tiny:active svg {
+          fill: #F48982;
+          transform: translateY(0); }
+        .btn-tiny:not(:last-child) {
+          margin-right: .3rem; }
+      
+      .heading-2 {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #F59A83;
+        text-transform: uppercase;
+        margin-bottom: 2.5rem;
+        text-align: center;
+        transform: skewY(-3deg); }
+      
+      .copyright {
+        color: #968B87;
+        font-size: 1.2rem;
+        margin-top: auto; }
+      
+      .link:link,
+      .link:visited {
+        color: #968B87; }
