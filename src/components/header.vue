@@ -9,9 +9,8 @@
 
                 <button class="btn search__btn" 
                         @click.prevent="fetchData">
-                    <svg class="search__icon">
-                        <use href="img/icons.svg#icon-magnifying-glass"></use>
-                    </svg>
+                        
+                    <i class="fas fa-search search__icon"></i>
                     <span>Search</span>
                 </button>
 

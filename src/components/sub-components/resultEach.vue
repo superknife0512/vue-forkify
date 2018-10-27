@@ -1,6 +1,8 @@
 <template>
-    <li @click="getRecipe">
-         <a class="results__link results__link" :href="`#${data.recipe_id}`">
+    <li @click="getRecipe(data.recipe_id)">
+         <a class="results__link results__link" 
+            :href="`#${data.recipe_id}`"
+            :class="{'results__link--active': isActive === data.recipe_id}">
             <figure class="results__fig">
                  <img :src="`${data.image_url}`" :alt="`${data.title}`">
              </figure>
@@ -14,7 +16,7 @@
 
 <script>
 export default {
-    props:['data'],
+    props:['data', 'isActive'],
     filters:{
         formatTitle(value){
             if(value.length > 17){
@@ -35,7 +37,8 @@ export default {
         }
     },
     methods:{
-        getRecipe(){
+        getRecipe(id){
+            this.$emit('changeActive', id)
             this.$store.commit('clearData', 'recipe');
             this.$store.dispatch('fetchRecipe',this.data.recipe_id);
         }

@@ -7,7 +7,9 @@
                 -->
                 <result-each v-for="result in getResults"
                             :key="result.recipe_id"
-                            :data="result">
+                            :data="result"
+                            :isActive='isActive'
+                            @changeActive='changeActive($event)'>
 
                 </result-each>
             </ul>
@@ -27,7 +29,8 @@ import resultPage from './sub-components/resultPage'
 export default {
     data(){
         return{
-            page: 1
+            page: 1,
+            isActive: null,
         }
     },
     components:{
@@ -65,6 +68,9 @@ export default {
         },
         goBack(){
             this.page--
+        },
+        changeActive(activeId){
+            this.isActive = activeId;
         }
     }
 }

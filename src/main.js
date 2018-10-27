@@ -14,8 +14,7 @@ new Vue({
   render: h => h(App),
   created(){
     const id = window.location.hash.replace('#','');
-    if(id){
-      
+    if(id){      
       ['hashchange', 'load'].forEach( event=> {
         window.addEventListener(event, this.$store.dispatch('fetchRecipe', id))
     })

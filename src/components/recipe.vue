@@ -19,11 +19,11 @@
                     <span class="recipe__info-text"> servings</span>
 
                     <div class="recipe__info-buttons">
-                        <button class="btn-tiny">
-                           <i class="fas fa-minus-circle"></i>
+                        <button class="btn-tiny" @click="changeServing('incr')">
+                           <i class="fas fa-plus-circle"></i>
                         </button>
-                        <button class="btn-tiny">
-                            <i class="fas fa-plus-circle"></i>
+                        <button class="btn-tiny" @click="changeServing('decr')">
+                            <i class="fas fa-minus-circle"></i>
                         </button>
                     </div>
 
@@ -37,71 +37,19 @@
 
             <div class="recipe__ingredients">
                 <ul class="recipe__ingredient-list">
-                    <li class="recipe__item">
+                    <li class="recipe__item" 
+                        v-for="ing in parseIngredient" 
+                        :key="ing.ingredient">
                         
                         <i class="fas fa-utensils recipe__icon"></i>
-                        <div class="recipe__count">1000</div>
+                        <div class="recipe__count">{{ing.count}}</div>
                         <div class="recipe__ingredient">
-                            <span class="recipe__unit">g</span>
-                            pasta
+                            <span class="recipe__unit">{{ing.unit}}</span>
+                            {{ing.ingredient}}
                         </div>
                     </li>
 
-                    <li class="recipe__item">
-                        <svg class="recipe__icon">
-                            <use href="img/icons.svg#icon-check"></use>
-                        </svg>
-                        <div class="recipe__count">1/2</div>
-                        <div class="recipe__ingredient">
-                            <span class="recipe__unit">cup</span>
-                            ricotta cheese
-                        </div>
-                    </li>
-
-                    <li class="recipe__item">
-                        <svg class="recipe__icon">
-                            <use href="img/icons.svg#icon-check"></use>
-                        </svg>
-                        <div class="recipe__count">1</div>
-                        <div class="recipe__ingredient">
-                            <span class="recipe__unit"></span>
-                            can of tomatoes, whole or crushed
-                        </div>
-                    </li>
-
-
-                    <li class="recipe__item">
-                        <svg class="recipe__icon">
-                            <use href="img/icons.svg#icon-check"></use>
-                        </svg>
-                        <div class="recipe__count">1</div>
-                        <div class="recipe__ingredient">
-                            <span class="recipe__unit"></span>
-                            can tuna packed in olive oil
-                        </div>
-                    </li>
-
-                    <li class="recipe__item">
-                        <svg class="recipe__icon">
-                            <use href="img/icons.svg#icon-check"></use>
-                        </svg>
-                        <div class="recipe__count">1/2</div>
-                        <div class="recipe__ingredient">
-                            <span class="recipe__unit">cup</span>
-                            grated parmesan cheese
-                        </div>
-                    </li>
-
-                    <li class="recipe__item">
-                        <svg class="recipe__icon">
-                            <use href="img/icons.svg#icon-check"></use>
-                        </svg>
-                        <div class="recipe__count">1/4</div>
-                        <div class="recipe__ingredient">
-                            <span class="recipe__unit">cup</span>
-                            fresh basil, chopped or torn
-                        </div>
-                    </li>
+                    
                 </ul>
 
                 <button class="btn-small recipe__btn">
@@ -149,10 +97,9 @@ export default {
 
         parseIngredient(){
             const ingredients = this.recipe.ingredients;
-            const longUnit = ['tablespoon', 'tablespoons', 'teaspoon', 'teaspoons', 'cup', 'cups', 'ounces'];
-            const shortUnit = ['tbsp', 'tbsp', 'tsp', 'tsp', 'cup', 'cup', 'oz'];
+            const longUnit = ['tablespoon', 'tablespoons', 'tbsps', 'teaspoon', 'teaspoons', 'tsps', 'cup', 'cups', 'ounces'];
+            const shortUnit = ['tbsp', 'tbsp', 'tbsp', 'tsp', 'tsp', 'tsp', 'cup', 'cup', 'oz'];
             const otherUnit = ['gram', 'pound', 'pounds'];
-
             //standalize
             const newIngredient = ingredients.map( ele => { //each ele is a string
             
@@ -167,11 +114,12 @@ export default {
             let ingreArr = ele.split(' ');//['2', 'cup', 'tomatoes']
             //find index from of the unit
             let indexCount = ingreArr.findIndex( ele3 => {
-                [...shortUnit, ...otherUnit].includes(ele3);
+                return [...shortUnit, ...otherUnit].includes(ele3);
             })
 
             let objIng;
-            if(indexCount < 0){
+            //can find out any unit 
+            if(indexCount === -1){
 
                 if(isNaN(parseInt(ingreArr[0]))){
                     //1.1 no count no unit indexCount = -1
@@ -188,31 +136,60 @@ export default {
                         ingredient: ingreArr.slice(1, ingreArr.length).join(' ')
                     }
                 }
-            }
-
-            if(indexCount > 0){
+            } else if (indexCount > 0){
                 //2.1 have count and unit
                 //2.2 have weird count 1-1/2 and its unit
+                //2.3 have weird like 1 1/2 and its unit
                 //['2-1/2', 'cup', 'tomatoes']
-                let countArr ;
-                if(ingreArr[0].includes('-')){
-                   countArr = parseInt(eval(ingreArr[0].split('-').join('+')));
-                } else {
-                    countArr = ingreArr[0];
-                }
-                let unitIng = ingreArr[indexCount];
-                
-                objIng = {
-                    count: countArr,
-                    unit: unitIng,
-                    ingredient: ingreArr.slice(indexCount, ingreArr.length).join(' ')
-                }
+                //['2', '1/2', 'cup', 'tomatoes'] -> [2, 1/2] -> 2+1/2
+                if(indexCount === 2 ){
+                    let count = eval((ingreArr.slice(0, indexCount)).join('+'));
+                    let unit = ingreArr[indexCount];
+                    
+                    objIng={
+                        count,
+                        unit,
+                        ingredient: ingreArr.slice(indexCount+1, ingreArr.length).join(' ')
+                    }
+                } else if (indexCount === 1){
+                    let count;
+                    if(ingreArr[0].includes('-')){
+                        count = eval(ingreArr[0].split('-').join('+'));
+                    }
+                    count = parseInt(ingreArr[0]);
+                    let unit = ingreArr[indexCount];
 
-            }
+                    objIng = {  
+                        count,
+                        unit,
+                        ingredient: ingreArr.slice(indexCount+1, ingreArr.length).join(' ')
+                    }
+                }
+            } 
             return objIng;
         })
         return newIngredient
 
+        },        
+    },
+
+    methods: {
+        //increase serving methods
+        changeServing(type){
+                let newSering;
+                if(type === 'incr'){
+                    newSering = this.serving + 1;
+                } else if (type === 'decr'){
+                    if(this.serving > 1){
+                        newSering = this.serving - 1;
+                    } else {
+                        return false;
+                    }
+                }
+                this.parseIngredient.forEach(ele => {
+                    ele.count*=(newSering/this.serving)
+                })            
+                this.serving = newSering;
         }
     }
 }
