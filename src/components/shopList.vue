@@ -62,7 +62,7 @@
 
             <button class="shopping__clear-all btn-small"
                     @click="clearAll"
-                    v-if="shopList !== null && shopList !== ''">
+                    v-if="shopList != [] && shopList != ''">
                 Clear all list
             </button>
 

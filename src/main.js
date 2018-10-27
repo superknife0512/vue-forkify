@@ -20,8 +20,11 @@ new Vue({
     })     
     }
     //restore like list when we reload pages
-    window.addEventListener('load', ()=>{
-      this.$store.commit('restore')
-    })
+    if(localStorage.length > 2){
+
+      window.addEventListener('load', ()=>{
+        this.$store.commit('restore')
+      })
+    }
   }
 }).$mount('#app')

@@ -1,5 +1,5 @@
 export const api = {
-    key : 'ead1dc4a7ff7f4ce539d779bf078142e',
+    key : 'af385d3b36d6694f553b7a4b3ef9a0ee',
     proxy: 'https://cors-anywhere.herokuapp.com/',
 }
 
