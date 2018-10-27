@@ -28,8 +28,8 @@
                     </div>
 
                 </div>
-                <button class="recipe__love">                    
-                    <i class="fas fa-heart heart__likes"></i>
+                <button class="recipe__love" @click="addToLikes()">                    
+                    <i :class="checkLike? 'fas':'far'" class="fa-heart heart__likes"></i>
                 </button>
             </div>
 
@@ -42,7 +42,7 @@
                         :key="ing.ingredient">
                         
                         <i class="fas fa-utensils recipe__icon"></i>
-                        <div class="recipe__count">{{ing.count}}</div>
+                        <div class="recipe__count">{{ing.count | formatCount}}</div>
                         <div class="recipe__ingredient">
                             <span class="recipe__unit">{{ing.unit}}</span>
                             {{ing.ingredient}}
@@ -52,7 +52,8 @@
                     
                 </ul>
 
-                <button class="btn-small recipe__btn">
+                <button class="btn-small recipe__btn"
+                        @click="addShopList()">
                     <i class="fas fa-shopping-cart search__icon"></i>
                     <span>Add to shopping list</span>
                 </button>
@@ -74,7 +75,10 @@
 </template>
 
 <script>
+import { Fraction } from 'fractional';
+
 export default {
+    /* eslint-disable */ 
     data(){
         return{
             serving: 4
@@ -170,7 +174,11 @@ export default {
         })
         return newIngredient
 
-        },        
+        }, 
+        
+        checkLike(){
+            return this.$store.getters.checkLike(this.recipe.recipe_id);
+        }
     },
 
     methods: {
@@ -188,8 +196,62 @@ export default {
                 }
                 this.parseIngredient.forEach(ele => {
                     ele.count*=(newSering/this.serving)
-                })            
+                })           
                 this.serving = newSering;
+        },
+        addShopList(){
+            const ingre = this.parseIngredient;
+            // const shopList = {
+            //     count: ingre.count,
+            //     unit: ingre.unit,
+            //     ingredient: ingre.ingredient,
+            //     id: Math.random().toString(35).substr(2,8)
+            // }
+            const shopList = ingre.map( ele=> {
+                return {
+                    count: ele.count,
+                    unit: ele.unit,
+                    ingredient: ele.ingredient,
+                    id: Math.random().toString(35).substr(2,8)
+                }
+            })
+            this.$store.commit('clearData', 'shopList');
+            this.$store.commit('addShopList', shopList);
+        },
+        addToLikes(){
+            const recipe = this.recipe;
+            const like = {
+                id: recipe.recipe_id,
+                title: recipe.title,
+                author: recipe.publisher,
+                image: recipe.image_url
+            }
+            this.$store.commit('addToLikes', like)
+        }
+    },
+
+    filters:{
+        formatCount(value){
+            const strCount = value.toString()
+            //count = 2 integer
+            //1.2 count = 0.5 no integer
+            //1.3 count = 2.5 have integer and decimal
+            if(strCount.includes('.')){
+                let [integer, decimal] = strCount.split('.'); //['0','5']
+                if(integer == 0){
+                    const newNumber = new Fraction(value);
+                    const numerator = Math.round(newNumber.numerator*1000)/1000;
+                    const denominator = Math.round(newNumber.denominator*1000)/1000;
+                    return `${numerator}/${denominator}`
+                } else if (integer != 0){
+                    const remainDeci = value - parseInt(integer);
+                    const newNumber = new Fraction(remainDeci);
+                    const numerator = Math.round(newNumber.numerator*1000)/1000;
+                    const denominator = Math.round(newNumber.denominator*1000)/1000;
+                    return `${parseInt(integer)} ${numerator}/${denominator}`
+                }
+            }
+            return value;
         }
     }
 }

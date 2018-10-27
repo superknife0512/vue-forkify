@@ -21,19 +21,9 @@
                 </div>
                 <div class="likes__panel">
                     <ul class="likes__list">
-<!--                         
-                        <li>
-                            <a class="likes__link" href="#23456">
-                                <figure class="likes__fig">
-                                    <img src="img/test-1.jpg" alt="Test">
-                                </figure>
-                                <div class="likes__data">
-                                    <h4 class="likes__name">Pasta with Tomato ...</h4>
-                                    <p class="likes__author">The Pioneer Woman</p>
-                                </div>
-                            </a>
-                        </li>
-                        -->
+                       
+                      <v-like></v-like>
+                        
                     </ul>
                 </div>
             </div>
@@ -41,11 +31,15 @@
 </template>
 
 <script>
+import vLike from './sub-components/like'
 export default {
   data(){
       return{
           search: null
       }
+  },
+  components:{
+      vLike
   },
   methods:{
       fetchData(){

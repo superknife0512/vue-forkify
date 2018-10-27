@@ -4,86 +4,25 @@
 
             <ul class="shopping__list">
 
-                <!--
-                <li class="shopping__item">
+                
+                <li class="shopping__item" 
+                    v-for="list in shopList"
+                    :key="list.ingredient">
                     <div class="shopping__count">
-                        <input type="number" value="500" step="100">
-                        <p>g</p>
+                        <input type="number"                                   
+                                :step="list.count"
+                                :value="list.count"
+                                @input="updateCount(list.id)">
+                        <p>{{list.unit}}</p>
                     </div>
-                    <p class="shopping__description">Pasta</p>
-                    <button class="shopping__delete btn-tiny">
-                        <svg>
-                            <use href="img/icons.svg#icon-circle-with-cross"></use>
-                        </svg>
+                    <p class="shopping__description">{{list.ingredient}}</p>
+                    <button class="shopping__delete btn-tiny"
+                            @click="deleteIngre(list.id)">
+                       <i class="fas fa-times-circle"></i>
                     </button>
                 </li>
 
-                <li class="shopping__item">
-                    <div class="shopping__count">
-                        <input type="number" value="0.5" step="0.1">
-                        <p>cup</p>
-                    </div>
-                    <p class="shopping__description">Ricotta cheese</p>
-                    <button class="shopping__delete btn-tiny">
-                        <svg>
-                            <use href="img/icons.svg#icon-circle-with-cross"></use>
-                        </svg>
-                    </button>
-                </li>
-
-                <li class="shopping__item">
-                    <div class="shopping__count">
-                        <input type="number" value="3.5" step="0.1">
-                        <p>tbsp</p>
-                    </div>
-                    <p class="shopping__description">Toasted almond slices</p>
-                    <button class="shopping__delete btn-tiny">
-                        <svg>
-                            <use href="img/icons.svg#icon-circle-with-cross"></use>
-                        </svg>
-                    </button>
-                </li>
-
-                <li class="shopping__item">
-                    <div class="shopping__count">
-                        <input type="number" value="0.5" step="0.1">
-                        <p>tbsp</p>
-                    </div>
-                    <p class="shopping__description">Sea salt</p>
-                    <button class="shopping__delete btn-tiny">
-                        <svg>
-                            <use href="img/icons.svg#icon-circle-with-cross"></use>
-                        </svg>
-                    </button>
-                </li>
-
-                <li class="shopping__item">
-                    <div class="shopping__count">
-                        <input type="number" value="0.25" step="0.1">
-                        <p>cup</p>
-                    </div>
-
-                    <p class="shopping__description">Minced green onions</p>
-                    <button class="shopping__delete btn-tiny">
-                        <svg>
-                            <use href="img/icons.svg#icon-circle-with-cross"></use>
-                        </svg>
-                    </button>
-                </li>
-
-                <li class="shopping__item">
-                    <div class="shopping__count">
-                        <input type="number" value="45" step="10">
-                        <p>g</p>
-                    </div>
-                    <p class="shopping__description">Sesame seeds</p>
-                    <button class="shopping__delete btn-tiny">
-                        <svg>
-                            <use href="img/icons.svg#icon-circle-with-cross"></use>
-                        </svg>
-                    </button>
-                </li>
-                -->
+                
             </ul>
 
             <div class="copyright">
@@ -96,7 +35,30 @@
 
 <script>
 export default {
-    
+    data(){
+        return{
+            
+        }
+    },
+
+    computed:{
+        shopList(){            
+            return this.$store.state.shopList ;
+        }
+    },
+    methods:{
+        updateCount(id){
+            const newVal = event.target.value;
+            const payloadObj = {
+                id,
+                newVal
+            }
+            this.$store.commit('updateCount',payloadObj);
+        },
+        deleteIngre(id){
+            this.$store.commit('deleteIngre', id);
+        }
+    }
 }
 </script>
 

@@ -11,8 +11,11 @@ export default new Vuex.Store({
   state: {
     results : null,
     recipe: null,
+    shopList: null,
+    likes: [],
     isLoading : false,
     loadingRec :false,
+    
   },
 
   mutations: {
@@ -30,6 +33,32 @@ export default new Vuex.Store({
     },
     clearData(state, whatData){
       state[whatData] = '';
+    },
+    addShopList(state, ingredients){
+      state.shopList = ingredients;
+    },
+    updateCount: (state, payload)=>{
+      const record = state.shopList.find( ele=> {
+        return ele.id === payload.id;
+      })
+      record.count = payload.newVal;
+    },
+    deleteIngre: (state, id)=>{
+      const indexItem = state.shopList.findIndex(ele=>ele.id === id);
+      state.shopList.splice(indexItem, 1);
+    },
+    addToLikes: (state, payload)=>{
+      const existLike = state.likes.find(ele=> ele.id === payload.id);
+      if(!existLike){
+        state.likes.push(payload);
+      } else {
+        state.likes.splice(state.likes.indexOf(existLike),1)
+      }
+      localStorage.setItem('like', JSON.stringify(state.likes));
+    },
+    restoreLikes(state){
+      const resData = localStorage.getItem('like');
+      state.likes= JSON.parse(resData);
     }
   },
 
@@ -41,6 +70,7 @@ export default new Vuex.Store({
         commit('getResult', data.data.recipes);
         commit('noneLoading','isLoading');
       } catch(err){
+        //eslint-disable-next-line
         console.log(err);
         commit('noneLoading','isLoading');
       }
@@ -54,6 +84,7 @@ export default new Vuex.Store({
         commit('noneLoading', 'loadingRec');
 
       } catch(err){
+        //eslint-disable-next-line
         console.log(err);
         commit('noneLoading','loadingRec');
 
@@ -61,5 +92,8 @@ export default new Vuex.Store({
     }
   },
   getters:{
+    checkLike: (state)=>id=>{
+      return state.likes.find(ele=> ele.id === id);
+    }
   }
 })

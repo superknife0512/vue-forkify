@@ -17,7 +17,11 @@ new Vue({
     if(id){      
       ['hashchange', 'load'].forEach( event=> {
         window.addEventListener(event, this.$store.dispatch('fetchRecipe', id))
-    })
+    })     
     }
+    //restore like list when we reload page s
+    window.addEventListener('load', ()=>{
+      this.$store.commit('restoreLikes')
+    })
   }
 }).$mount('#app')
