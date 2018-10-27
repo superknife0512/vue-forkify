@@ -10,10 +10,22 @@
                             placeholder="count"
                             v-model="count">
 
-                    <input type="text" 
+                    <!-- <input type="text" 
                         class="shopping__input-unit" 
                         placeholder="unit"
-                        v-model="unit">
+                        v-model="unit"> -->
+                    <select name="unit" 
+                            id="unit" 
+                            class="shopping__input-unit"
+                            v-model="unit"
+                            >
+                        <option :value="unit" 
+                                v-for="unit in allUnits"
+                                :key="unit">
+                                {{ unit }}
+                        </option>
+                    </select>
+
                 </div>
 
                 <input type="text" 
@@ -67,8 +79,9 @@ export default {
     data(){
         return{
             count: '',
-            unit:'',
-            ingredient:''
+            unit:'tsp',
+            ingredient:'',
+            allUnits: ['tsp', 'tbsp', 'cup', 'oz', 'gram']
         }
     },
 
@@ -109,6 +122,8 @@ export default {
                 }
 
                 this.$store.commit('addMoreList', objList);
+                this.count = '';
+                this.ingredient = '';
             } else {
                 alert('you must add full field first')
             }
@@ -181,17 +196,21 @@ export default {
         display: flex;
         flex-direction: column;
         // justify-content: space-between;
-        input{
+        input, .shopping__input-unit{
             
             border-radius: 4px;
             border: 1px solid rgb(218, 218, 218);
             margin-bottom: 1.2rem;
-            height: 2.3rem;
-            padding: .5rem;
+            height: 3.4rem;
+            padding: .5rem;     
+            color: rgb(100, 100, 100);       
 
             &:focus{
                 outline: none;
                 background-color: #eee;
+            }
+            &::placeholder{
+                color: rgb(170, 170, 170);
             }
         }
     }
@@ -201,6 +220,8 @@ export default {
     }
     &__group{
         display: flex;
+        align-items: center;
+       
     }
     &__input-unit{
         width: 50%;

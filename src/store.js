@@ -11,7 +11,7 @@ export default new Vuex.Store({
   state: {
     results : null,
     recipe: null,
-    shopList: null,
+    shopList: [],
     likes: [],
     isLoading : false,
     loadingRec :false,
