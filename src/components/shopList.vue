@@ -2,6 +2,29 @@
     <div class="shopping">
             <h2 class="heading-2">My Shopping List</h2>
 
+            <div class="shopping__add">
+                <div class="shopping__group">
+
+                    <input type="number" 
+                            class="shopping__input-count" 
+                            placeholder="count"
+                            v-model="count">
+
+                    <input type="text" 
+                        class="shopping__input-unit" 
+                        placeholder="unit"
+                        v-model="unit">
+                </div>
+
+                <input type="text" 
+                        class="shopping__input-ingredient" 
+                        placeholder="ingredient"
+                        v-model="ingredient">
+
+                <button class="shopping__add-btn"
+                        @click="addMoreList">Add Item</button>
+            </div>
+
             <ul class="shopping__list">
 
                 
@@ -25,6 +48,12 @@
                 
             </ul>
 
+            <button class="shopping__clear-all btn-small"
+                    @click="clearAll"
+                    v-if="shopList !== null && shopList !== ''">
+                Clear all list
+            </button>
+
             <div class="copyright">
                 &copy;Design by Jonas Schmedtmann. Powered by
                 <a href="http://food2fork.com" target="_blank" class="link">Food2Fork.com</a>.
@@ -37,7 +66,9 @@
 export default {
     data(){
         return{
-            
+            count: '',
+            unit:'',
+            ingredient:''
         }
     },
 
@@ -57,6 +88,30 @@ export default {
         },
         deleteIngre(id){
             this.$store.commit('deleteIngre', id);
+        },
+        clearAll(){
+            this.$store.commit('clearData', 'shopList')
+        },
+
+        addMoreList(){
+            if(this.count !== '' && this.ingredient!== ''){
+               
+                let count= this.count;
+                let unit= this.unit;
+                let ingredient= this.ingredient;
+                const id = Math.random().toString(35).substr(2,8);
+
+                let objList = {
+                    id,
+                    count,
+                    unit,
+                    ingredient                    
+                }
+
+                this.$store.commit('addMoreList', objList);
+            } else {
+                alert('you must add full field first')
+            }
         }
     }
 }
@@ -117,5 +172,57 @@ export default {
   .shopping__item:hover .shopping__delete {
     opacity: 1;
     visibility: visible; }
+.shopping__clear-all{
+    align-self: center;
+    margin-top: 3rem;
+}
+.shopping{
+    &__add{
+        display: flex;
+        flex-direction: column;
+        // justify-content: space-between;
+        input{
+            
+            border-radius: 4px;
+            border: 1px solid rgb(218, 218, 218);
+            margin-bottom: 1.2rem;
+            height: 2.3rem;
+            padding: .5rem;
 
+            &:focus{
+                outline: none;
+                background-color: #eee;
+            }
+        }
+    }
+    &__input-count{
+        width: 50%;
+        margin-right: .5rem; 
+    }
+    &__group{
+        display: flex;
+    }
+    &__input-unit{
+        width: 50%;
+
+    }
+    &__input-ingredient{
+        width: 100%;
+    }
+    &__add-btn{
+        background-color: #f59a83;
+        color: white;
+        border-radius: 200px;
+        border: none;
+        padding: .5rem 1rem;
+        align-self: center;
+        transition: all .3s;
+        margin-bottom: 1rem;
+        cursor: pointer;
+
+        &:hover{
+            background-color: rgb(251, 188, 137);
+        }
+    }
+}
 </style>

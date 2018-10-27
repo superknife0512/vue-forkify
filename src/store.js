@@ -22,31 +22,39 @@ export default new Vuex.Store({
     getResult: (state, payload)=>{
       state.results = payload;  
     },
+
     getRecipe(state,payload){
       state.recipe = payload;
     },
+
     Loading(state,stateLoading){
       state[stateLoading] = true;
     },
+
     noneLoading(state,stateLoading){
       state[stateLoading] = false;
     },
+
     clearData(state, whatData){
       state[whatData] = '';
     },
+
     addShopList(state, ingredients){
       state.shopList = ingredients;
     },
+
     updateCount: (state, payload)=>{
       const record = state.shopList.find( ele=> {
         return ele.id === payload.id;
       })
       record.count = payload.newVal;
     },
+
     deleteIngre: (state, id)=>{
       const indexItem = state.shopList.findIndex(ele=>ele.id === id);
       state.shopList.splice(indexItem, 1);
     },
+
     addToLikes: (state, payload)=>{
       const existLike = state.likes.find(ele=> ele.id === payload.id);
       if(!existLike){
@@ -56,9 +64,14 @@ export default new Vuex.Store({
       }
       localStorage.setItem('like', JSON.stringify(state.likes));
     },
-    restoreLikes(state){
+
+    restore(state){
       const resData = localStorage.getItem('like');
       state.likes= JSON.parse(resData);
+    },
+
+    addMoreList(state, payload){
+      state.shopList.unshift(payload);
     }
   },
 

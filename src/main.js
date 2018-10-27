@@ -19,9 +19,9 @@ new Vue({
         window.addEventListener(event, this.$store.dispatch('fetchRecipe', id))
     })     
     }
-    //restore like list when we reload page s
+    //restore like list when we reload pages
     window.addEventListener('load', ()=>{
-      this.$store.commit('restoreLikes')
+      this.$store.commit('restore')
     })
   }
 }).$mount('#app')
